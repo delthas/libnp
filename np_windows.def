@@ -1,0 +1,5 @@
+EXPORTS
+np_init
+np_destroy
+np_info_get
+np_info_destroy
