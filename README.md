@@ -1,6 +1,6 @@
 # libnp [![builds.sr.ht status](https://builds.sr.ht/~delthas/libnp.svg)](https://builds.sr.ht/~delthas/libnp)
 
-A tiny library for extracting information about the music/image/video currently playing on the system.
+A tiny cross-platform library for extracting information about the music/image/video that is **N**ow **P**laying on the system.
 
 Supported OS:
 - Windows (using GlobalSystemMediaTransportControlsSessionManager)
