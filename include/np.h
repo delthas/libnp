@@ -1,5 +1,6 @@
 #pragma once
 #include <stdint.h>
+#include <stdio.h>
 #include <time.h>
 
 void np_init();
@@ -11,6 +12,16 @@ enum np_playback_type {
 	np_playback_type_music,
 	np_playback_type_video,
 	np_playback_type_image,
+};
+
+enum np_playback_status_type {
+	np_playbackStatus_type_unknown,
+	np_playbackStatus_type_closed,
+	np_playbackStatus_type_opened,
+	np_playbackStatus_type_changing,
+	np_playbackStatus_type_stopped,
+	np_playbackStatus_type_playing,
+	np_playbackStatus_type_paused,
 };
 
 struct np_info {
@@ -33,7 +44,6 @@ struct np_info {
 	char *created; // linux only
 	char *first_played; // linux only
 	char *last_played; // linux only
-
 	char *album;
 	int album_track_count; // windows only
 	char *art_url; // linux only
@@ -46,6 +56,12 @@ struct np_info {
 	int track_number;
 	char *url; // linux only
 
+	int position; // windows only
+	int start_time; // windows only
+	int end_time; // windows only
+	int last_updated; // windows only
+
+	enum np_playback_status_type playback_status; // windows only
 	enum np_playback_type playback_type; // windows only
 };
 
