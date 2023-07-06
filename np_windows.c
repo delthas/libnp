@@ -127,6 +127,16 @@ struct np_info *np_info_get() {
 		goto exit4;
 	}
 
+	__x_ABI_CWindows_CMedia_CControl_CIGlobalSystemMediaTransportControlsSessionTimelineProperties *timeline;
+	if (FAILED(session->lpVtbl->GetTimelineProperties(session, &timeline)) || !timeline) {
+		goto exit4;
+	}
+
+	__x_ABI_CWindows_CMedia_CControl_CIGlobalSystemMediaTransportControlsSessionPlaybackInfo *playback_info;
+	if (FAILED(session->lpVtbl->GetPlaybackInfo(session, &playback_info)) || !playback_info) {
+		goto exit4;
+	}
+
 	struct async_handler info_async = {
 		.vtable = &async_handler_vtable,
 		.iid = &info_async_iid,
@@ -145,6 +155,53 @@ struct np_info *np_info_get() {
 	}
 
 	r = calloc(1, sizeof(struct np_info));
+
+	__x_ABI_CWindows_CFoundation_CTimeSpan position;
+	if (SUCCEEDED(timeline->lpVtbl->get_Position(timeline, &position))) {
+		r->position = position.Duration;
+	}
+
+	__x_ABI_CWindows_CFoundation_CTimeSpan start_time;
+	if (SUCCEEDED(timeline->lpVtbl->get_StartTime(timeline, &start_time))) {
+		r->start_time = start_time.Duration;
+	}
+
+	__x_ABI_CWindows_CFoundation_CTimeSpan end_time;
+	if (SUCCEEDED(timeline->lpVtbl->get_EndTime(timeline, &end_time))) {
+		r->end_time = end_time.Duration;
+	}
+
+	__x_ABI_CWindows_CFoundation_CDateTime last_updated;
+	if (SUCCEEDED(timeline->lpVtbl->get_LastUpdatedTime(timeline, &last_updated))) {
+		r->last_updated = last_updated.UniversalTime;
+	}
+
+	__x_ABI_CWindows_CMedia_CControl_CGlobalSystemMediaTransportControlsSessionPlaybackStatus playback_status;
+	if (SUCCEEDED(playback_info->lpVtbl->get_PlaybackStatus(playback_info, &playback_status))) {
+		switch (playback_status) {
+		case GlobalSystemMediaTransportControlsSessionPlaybackStatus_Closed:
+			r->playback_status = np_playbackStatus_type_closed;
+			break;
+		case GlobalSystemMediaTransportControlsSessionPlaybackStatus_Opened:
+			r->playback_status = np_playbackStatus_type_opened;
+			break;
+		case GlobalSystemMediaTransportControlsSessionPlaybackStatus_Changing:
+			r->playback_status = np_playbackStatus_type_changing;
+			break;
+		case GlobalSystemMediaTransportControlsSessionPlaybackStatus_Stopped:
+			r->playback_status = np_playbackStatus_type_stopped;
+			break;
+		case GlobalSystemMediaTransportControlsSessionPlaybackStatus_Playing:
+			r->playback_status = np_playbackStatus_type_playing;
+			break;
+		case GlobalSystemMediaTransportControlsSessionPlaybackStatus_Paused:
+			r->playback_status = np_playbackStatus_type_paused;
+			break;
+		default:
+			r->playback_status = np_playbackStatus_type_unknown;
+			break;
+		}
+	}
 
 	HSTRING album_artist;
 	if (SUCCEEDED(info->lpVtbl->get_AlbumArtist(info, &album_artist)) && album_artist) {

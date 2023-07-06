@@ -61,6 +61,15 @@ int main() {
 		if (info->track_number) {
 			printf("Track Number: %d\n", info->track_number);
 		}
+		if (info->start_time) {
+			printf("Start Time: %d\n", info->start_time);
+		}
+		if (info->end_time) {
+			printf("End Time: %d\n", info->end_time);
+		}
+		if (info->position) {
+			printf("Position: %d\n", info->position);
+		}
 		if (info->url) {
 			printf("URL: %s\n", info->url);
 		}
@@ -73,6 +82,28 @@ int main() {
 			break;
 		case np_playback_type_video:
 			printf("Type: Video\n");
+			break;
+		default:
+			break;
+		}
+		switch (info->playback_status) {
+		case np_playbackStatus_type_closed:
+			printf("Status: Closed\n");
+			break;
+		case np_playbackStatus_type_opened:
+			printf("Status: Opened\n");
+			break;
+		case np_playbackStatus_type_changing:
+			printf("Status: Changing\n");
+			break;
+		case np_playbackStatus_type_stopped:
+			printf("Status: Stopped\n");
+			break;
+		case np_playbackStatus_type_playing:
+			printf("Status: Playing\n");
+			break;
+		case np_playbackStatus_type_paused:
+			printf("Status: Paused\n");
 			break;
 		default:
 			break;
